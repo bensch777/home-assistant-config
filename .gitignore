@@ -15,3 +15,17 @@
 ip_bans.yaml
 secrets.yaml
 known_devices.yaml
+
+## Others
+._includes
+.homekit.state
+.spotify-token-cache
+.vscode/
+appdaemon/compiled
+appdaemon/dashboards/
+home-assistant_v2.db
+tts/
+webostv.conf
+notebooks/
+airsonos.xml
+themes/ios-*

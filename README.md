@@ -1,1 +1,1 @@
-# home-assistant-config
+# Benjamin's Home Assistant config files 🤖
