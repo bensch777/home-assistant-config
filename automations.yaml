@@ -14,7 +14,7 @@
   - entity_id: input_boolean.wake_up_with_spotify
     service: script.wake_up_with_spotify
 - id: 52b07f8689be4ab39d46f75410a4267a
-  alias: Set Sonos Alarm
+  alias: 'Sonos: Set alarm'
   trigger:
   - entity_id: input_boolean.alarm_clock_status
     platform: state
@@ -26,7 +26,7 @@
       entity_id: media_player.schlafzimmer
       time: '{{ states.input_datetime.alarm_clock_time.state }}'
     service: sonos.update_alarm
-- alias: Disable Sonos Alarm
+- alias: 'Sonos: Disable alarm'
   trigger:
   - platform: state
     entity_id: input_boolean.alarm_clock_status
@@ -39,7 +39,7 @@
       enabled: false
   id: a1da7a3639f34a9eb3f7603a44c31e78
 - id: '1594064894682'
-  alias: Set Sonos Alarm Time
+  alias: 'Sonos: Set alarm time'
   description: ''
   trigger:
   - entity_id: input_datetime.alarm_clock_time
