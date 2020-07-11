@@ -1,0 +1,100 @@
+'1593959264717':
+  alias: Leaving the house
+  sequence:
+  - service: script.turn_off_everything
+turn_off_everything:
+  alias: Turn off everything
+  sequence:
+  - entity_id: media_player.living_room
+    service: media_player.media_play_pause
+  - entity_id: all
+    service: light.turn_off
+  - data: {}
+    entity_id: media_player.living_room_2
+    service: media_player.media_play_pause
+  - data: {}
+    entity_id: media_player.schlafzimmer
+    service: media_player.media_play_pause
+  - data: {}
+    entity_id: media_player.spotify
+    service: media_player.media_play_pause
+arriving:
+  alias: Arriving home
+  sequence:
+  - service: script.cozy_lights_kitchen
+  - service: media_player.select_source
+    data_template:
+      entity_id: media_player.living_room
+      source: Radio Hamburg
+  - service: media_player.volume_set
+    data_template:
+      entity_id: media_player.living_room
+      volume_level: 0.1
+  - service: media_player.play_media
+    data_template:
+      entity_id: media_player.living_room
+cozy_lights_kitchen:
+  alias: Set cozy lights in the kitchen
+  sequence:
+  - data:
+      entity_id: light.kuchenbeleuchtung
+      brightness_pct: 25
+    service: light.turn_on
+nhl_spotify:
+  alias: Please Duschplaylist in Badroom
+  sequence:
+  - data_template:
+      entity_id: media_player.spotify
+      source: Benjamins 2. Echo Dot
+    service: media_player.select_source
+  - data:
+      shuffle: true
+    entity_id: media_player.spotify
+    service: media_player.shuffle_set
+  - data_template:
+      entity_id: media_player.spotify
+      volume_level: 0.1
+    service: media_player.volume_set
+  - data_template:
+      entity_id: media_player.spotify
+      media_content_id: spotify:playlist:37i9dQZF1DWSWyJydK4fTU
+      media_content_type: playlist
+    service: media_player.play_media
+childown_spotify:
+  alias: Play NHL sound from spotify
+  fields:
+    source:
+      description: Which source to use on the speakers
+      example: Wifi
+  sequence:
+  - service: media_player.select_source
+    data_template:
+      entity_id: media_player.schlafzimmer
+      source: '{{ source }}'
+  - service: media_player.shuffle_set
+    entity_id: media_player.schlafzimmer
+    data:
+      shuffle: true
+  - service: media_player.volume_set
+    data_template:
+      entity_id: media_player.schlafzimmer
+      volume_level: 0.1
+  - service: media_player.play_media
+    data_template:
+      entity_id: media_player.schlafzimmer
+      media_content_type: playlist
+      media_content_id: spotify:playlist:3Y3NX4qhBo5rxvU60MgUoh
+wake_up_with_spotify:
+  alias: Play NHL sound from spotify
+  sequence:
+  - service: media_player.select_source
+    data_template:
+      entity_id: media_player.schlafzimmer
+      source: Radio Hamburg
+  - service: media_player.volume_set
+    data_template:
+      entity_id: media_player.schlafzimmer
+      volume_level: 0.1
+  - service: media_player.play_media
+    data_template:
+      entity_id: media_player.schlafzimmer

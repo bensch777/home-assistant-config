@@ -1,0 +1,17 @@
+homeassistant: !include includes/homeassistant.yaml
+default_config:
+frontend:
+  themes: !include_dir_merge_named themes
+
+# Managed via UI
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+# Others
+device_tracker: !include includes/device_trackers.yaml
+light: !include includes/lights.yaml
+notify: !include includes/notify.yaml
+sensor: !include includes/sensors.yaml
+spotify: !include includes/spotify.yaml
+group: !include includes/groups.yaml
