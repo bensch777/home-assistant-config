@@ -1,0 +1,5 @@
+customize:
+  person.benjamin:
+    entity_picture: !secret profile_photo_benni
+  person.jana:
+    entity_picture: !secret profile_photo_jana

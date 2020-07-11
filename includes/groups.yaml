@@ -1,0 +1,5 @@
+persons:
+  name: People
+  entities:
+    - person.jana
+    - person.benjamin

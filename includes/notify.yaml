@@ -1,0 +1,6 @@
+- platform: group
+  name: all_iphones
+  services:
+    - service: mobile_app_iphone_bn
+    - service: mobile_app_iphone
+    - service: mobile_app_ipad_bn    

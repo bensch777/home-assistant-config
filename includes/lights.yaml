@@ -1,0 +1,25 @@
+- platform: group
+  name: Küchenbeleuchtung
+  entities:
+    - light.hue_filament_bulb_1
+    - light.hue_filament_bulb_2
+    - light.hue_filament_bulb_3
+    - light.hue_filament_bulb_4
+- platform: group
+  name: Wohnzimmerbeleuchtung
+  entities:
+    - light.hue_filament_bulb_5
+    - light.hue_white_lamp_1
+    - light.livingcolors_1
+- platform: group
+  name: Sportzimmerbeleuchtung
+  entities:
+    - light.hue_color_spot_1
+    - light.hue_color_spot_2
+    - light.hue_color_spot_3
+- platform: group
+  name: Schlafzimmerbeleuchtung
+  entities:
+    - light.hue_white_lamp_2
+    - light.configuration_tool_1
+    - light.hue_ambiance_candle_1
