@@ -1,5 +1,7 @@
-# Example .gitignore file for your config dir.
-# An * ensures that everything will be ignored.
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
 
 # You can whitelist files/folders with !, these will not be ignored.
 !*.yaml
@@ -27,6 +29,7 @@ known_devices.yaml
 appdaemon/compiled
 appdaemon/dashboards/
 home-assistant_v2.db
+/__pycache__/
 tts/
 webostv.conf
 notebooks/
