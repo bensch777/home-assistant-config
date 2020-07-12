@@ -1,5 +1,5 @@
 # Byte-compiled / optimized / DLL files
-__pycache__/
+/__pycache__/
 *.py[cod]
 *$py.class
 
@@ -51,7 +51,6 @@ known_devices.yaml
 appdaemon/compiled
 appdaemon/dashboards/
 home-assistant_v2.db
-/__pycache__/
 tts/
 webostv.conf
 notebooks/
