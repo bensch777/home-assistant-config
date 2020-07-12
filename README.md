@@ -1,6 +1,7 @@
 # Benjamin's Home Assistant config files 🤖
 
 
+Thanks to [Bas Nijholt's](https://github.com/basnijholt/home-assistant-config) for all the inspirations.
 
 ## My devices
 
