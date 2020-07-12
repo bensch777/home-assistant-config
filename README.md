@@ -18,7 +18,10 @@
 
 ### Lights
 - Philips Hue Living Color (3. Generation)
-- PHILIPS Hue Filament E27 (5x)
+- Philips Hue E27 Filament (5x)
+- Philips Hue GU10 Color Spot (3x)
+- Philips Hue E14 White Candle
+- Philips Hue E27 White (2x)
 
 ### Media Player
 - Sonos Play 1 (2x)
@@ -27,9 +30,11 @@
 - Amazon Echo Dot (3. Generation)
 
 ### Hubs
-- ConBee 2
+- ConBee II
 - Hue Bridge
 
 ### Server
 - Raspberry Pi 4, 4GB RAM
-- 
+
+### Others
+- Sony KDL55W755C
