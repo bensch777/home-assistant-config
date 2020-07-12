@@ -42,10 +42,18 @@ cozy_lights_kitchen:
     service: light.turn_on
 badroom_spotify:
   alias: 'Badroom: Play shower music from Spotify'
+  fields:
+    source:
+      description: Which source to use on the speakers
+      example: Wifi
+    playlist:
+      description: Which playlist to use on the speakers
+      example: 37i9dQZF1DWSWyJydK4fTU
   sequence:
   - data_template:
       entity_id: media_player.spotify
-      source: Benjamins 2. Echo Dot
+      #source: Benjamins 2. Echo Dot
+      source: '{{ source }}'
     service: media_player.select_source
   - data:
       shuffle: true
@@ -57,7 +65,7 @@ badroom_spotify:
     service: media_player.volume_set
   - data_template:
       entity_id: media_player.spotify
-      media_content_id: spotify:playlist:37i9dQZF1DWSWyJydK4fTU
+      media_content_id: spotify:playlist:{{ playlist }}
       media_content_type: playlist
     service: media_player.play_media
 childown_spotify:
