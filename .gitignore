@@ -12,6 +12,7 @@
 .google.token
 .idea
 www/images/*
+!xiaomi-vacuum.jpeg
 
 # Ensure these YAML files are ignored, otherwise your secret data/credentials will leak.
 ip_bans.yaml
