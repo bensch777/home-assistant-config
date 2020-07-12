@@ -1,0 +1,3 @@
+- platform: xiaomi_miio
+  host: 192.168.178.34
+  token: !secret xiaomi_miio_token
