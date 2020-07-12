@@ -40,8 +40,8 @@ cozy_lights_kitchen:
       brightness_pct: 25
       entity_id: light.kuchenbeleuchtung
     service: light.turn_on
-badroom_spotify:
-  alias: 'Badroom: Play shower music from Spotify'
+play_spotify:
+  alias: 'Play music from Spotify'
   fields:
     source:
       description: Which source to use on the speakers
@@ -52,7 +52,6 @@ badroom_spotify:
   sequence:
   - data_template:
       entity_id: media_player.spotify
-      #source: Benjamins 2. Echo Dot
       source: '{{ source }}'
     service: media_player.select_source
   - data:
