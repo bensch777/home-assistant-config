@@ -100,3 +100,51 @@
       entity_id: input_datetime.door_last_opened
       time: '{{ (as_timestamp(now()) | timestamp_custom("%H:%M:%S", true)) }}'
     service: input_datetime.set_datetime
+- id: '1594631215761'
+  alias: Vacation Mode
+  description: Vacation Mode
+  trigger:
+  - entity_id: input_boolean.vacation_mode
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition: []
+  action:
+  - entity_id: input_boolean.alarm_clock_status
+    service: input_boolean.turn_off
+- id: '1594631698389'
+  alias: 'Vacation mode: auto turn on'
+  description: ''
+  trigger:
+  - entity_id: group.persons
+    for: '24:00:00'
+    from: home
+    platform: state
+    to: not_home
+  condition: []
+  action:
+  - entity_id: input_boolean.vacation_mode
+    service: input_boolean.turn_on
+  - data:
+      message: No one at home for 24 hours, switching on vacation mode.
+      title: Vacation mode
+    service: notify.all_iphones
+- id: '1594631785192'
+  alias: 'Vacation mode: auto turn off'
+  description: ''
+  trigger:
+  - entity_id: group.persons
+    from: not_home
+    platform: state
+    to: home
+  condition:
+  - condition: state
+    entity_id: input_boolean.vacation_mode
+    state: 'on'
+  action:
+  - entity_id: input_boolean.vacation_mode
+    service: input_boolean.turn_off
+  - data:
+      message: Welcome back! Switching off the vacation mode.
+      title: Vacation mode
+    service: notify.all_iphones
