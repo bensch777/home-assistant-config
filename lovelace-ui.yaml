@@ -15,3 +15,5 @@ resources:
     type: module
   - url: /community_plugin/lovelace-xiaomi-vacuum-card/xiaomi-vacuum-card.js
     type: module
+  - url: /local/simple-weather-card-bundle.js?v=0.8.0
+    type: module
