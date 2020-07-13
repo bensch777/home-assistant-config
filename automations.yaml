@@ -114,6 +114,7 @@
     service: input_boolean.turn_off
 - id: '1594631698389'
   alias: 'Vacation mode: auto turn on'
+  initial_state: "on"
   description: ''
   trigger:
   - entity_id: group.persons
@@ -131,6 +132,7 @@
     service: notify.all_iphones
 - id: '1594631785192'
   alias: 'Vacation mode: auto turn off'
+  initial_state: "on"
   description: ''
   trigger:
   - entity_id: group.persons
