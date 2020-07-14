@@ -3,6 +3,8 @@
 
 Thanks to [Bas Nijholt's](https://github.com/basnijholt/home-assistant-config) for all the inspirations.
 
+![Lovelace UI](https://www.laufmix.de/wp-content/uploads/2020/07/hassio.png)
+
 ## My devices
 
 ### Switches
