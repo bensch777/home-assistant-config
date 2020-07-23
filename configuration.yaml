@@ -11,8 +11,22 @@ scene: !include scenes.yaml
 # Others
 device_tracker: !include includes/device_trackers.yaml
 light: !include includes/lights.yaml
+hue: !include includes/hue.yaml
 notify: !include includes/notify.yaml
 sensor: !include includes/sensors.yaml
 spotify: !include includes/spotify.yaml
 group: !include includes/groups.yaml
 vacuum: !include includes/vacuum.yaml
+
+# Amazon Echo example configuration.yaml entry
+emulated_hue:
+  host_ip: !secret ip_internal
+  listen_port: 80
+  off_maps_to_on_domains:
+    - script
+    - scene
+  exposed_domains:
+    - media_player
+    - input_boolean
+  expose_by_default: true
+  # Amazon Echo/Alexa stopped working on different ports. Search for "Philips Hue Bridge V1 (round)" in the Alexa App to discover devices

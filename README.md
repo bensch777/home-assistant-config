@@ -24,7 +24,7 @@ Thanks to [Bas Nijholt's](https://github.com/basnijholt/home-assistant-config) f
 - Xiaomi Aqara Door Sensor
 
 ### Lights
-- Philips Hue Living Color (3. Generation)
+- Philips Hue Go (2. Generation)
 - Philips Hue E27 Filament (5x)
 - Philips Hue GU10 Color Spot (3x)
 - Philips Hue E14 White Candle
@@ -38,7 +38,6 @@ Thanks to [Bas Nijholt's](https://github.com/basnijholt/home-assistant-config) f
 
 ### Hubs
 - ConBee II
-- Hue Bridge
 
 ### Server
 - Raspberry Pi 4, 4GB RAM
