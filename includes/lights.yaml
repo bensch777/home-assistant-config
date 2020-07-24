@@ -10,7 +10,7 @@
   entities:
     - light.hue_filament_bulb_5
     - light.hue_white_lamp_1
-    - light.livingcolors_1
+    - light.hue_go_1
 - platform: group
   name: Sportzimmerbeleuchtung
   entities:
