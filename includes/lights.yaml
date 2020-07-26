@@ -21,5 +21,4 @@
   name: Schlafzimmerbeleuchtung
   entities:
     - light.hue_white_lamp_2
-    - light.configuration_tool_1
     - light.hue_ambiance_candle_1

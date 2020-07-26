@@ -114,7 +114,7 @@
     service: input_boolean.turn_off
 - id: '1594631698389'
   alias: 'Vacation mode: auto turn on'
-  initial_state: "on"
+  initial_state: 'on'
   description: ''
   trigger:
   - entity_id: group.persons
@@ -132,7 +132,7 @@
     service: notify.all_iphones
 - id: '1594631785192'
   alias: 'Vacation mode: auto turn off'
-  initial_state: "on"
+  initial_state: 'on'
   description: ''
   trigger:
   - entity_id: group.persons
@@ -150,3 +150,59 @@
       message: Welcome back! Switching off the vacation mode.
       title: Vacation mode
     service: notify.all_iphones
+- id: '1595754875510'
+  alias: 'Schlafzimmer - Hue Dimmer: Light on'
+  description: ''
+  trigger:
+  - device_id: fb41032420324dd5b3a7ac88cedb2fb9
+    domain: deconz
+    platform: device
+    subtype: turn_on
+    type: remote_button_short_press
+  condition: []
+  action:
+  - data: {}
+    entity_id: switch.configuration_tool_1
+    service: switch.turn_on
+  - data: {}
+    entity_id: light.schlafzimmerbeleuchtung
+    service: light.turn_on
+  mode: single
+- id: '1595755790532'
+  alias: 'Schlafzimmer - Hue Dimmer: Light off'
+  description: ''
+  trigger:
+  - device_id: fb41032420324dd5b3a7ac88cedb2fb9
+    domain: deconz
+    platform: device
+    subtype: turn_off
+    type: remote_button_short_press
+  condition: []
+  action:
+  - data: {}
+    entity_id: light.schlafzimmerbeleuchtung
+    service: light.turn_off
+  - data: {}
+    entity_id: switch.configuration_tool_1
+    service: switch.turn_off
+  mode: single
+- id: '1595757412339'
+  alias: Schlafzimmer Hue Dimmer - Brightnett
+  description: ''
+  trigger:
+  - device_id: fb41032420324dd5b3a7ac88cedb2fb9
+    domain: deconz
+    platform: device
+    subtype: dim_up
+    type: remote_button_short_press
+  - device_id: fb41032420324dd5b3a7ac88cedb2fb9
+    domain: deconz
+    platform: device
+    subtype: dim_down
+    type: remote_button_short_press
+  condition: []
+  action:
+  - data:
+      group: light.schlafzimmerbeleuchtung
+    service: script.increase_brightness
+  mode: single

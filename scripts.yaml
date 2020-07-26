@@ -105,3 +105,18 @@ wake_up_with_spotify:
   - data_template:
       entity_id: media_player.schlafzimmer
     service: media_player.play_media
+
+
+increase_brightness:
+  alias: Increase the brightness of a group of lights
+  fields:
+    group:
+      description: The group to apply the light increase to.
+      example: light.living_room_lights
+  sequence:
+  - service: light.turn_on
+    data_template:
+      entity_id: '{{ group }}'
+      brightness: "{% set b = state_attr(group, 'brightness') %} {% if b == None\
+        \ %}\n  10\n{% elif b < 20 %}\n  128\n{% elif b < 140 %}\n  255\n{% else %}\n\
+        \  10\n{% endif %}\n"
