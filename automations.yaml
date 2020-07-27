@@ -187,7 +187,7 @@
     service: switch.turn_off
   mode: single
 - id: '1595757412339'
-  alias: Schlafzimmer Hue Dimmer - Brightnett
+  alias: Schlafzimmer Hue Dimmer - Brightness
   description: ''
   trigger:
   - device_id: fb41032420324dd5b3a7ac88cedb2fb9
@@ -205,4 +205,16 @@
   - data:
       group: light.schlafzimmerbeleuchtung
     service: script.increase_brightness
+  mode: single
+- id: '1595841289664'
+  alias: 'General: Set theme at startup'
+  description: ''
+  trigger:
+  - event: start
+    platform: homeassistant
+  condition: []
+  action:
+  - data:
+      name: ios-dark-mode
+    service: frontend.set_theme
   mode: single
