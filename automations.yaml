@@ -218,3 +218,35 @@
       name: ios-dark-mode
     service: frontend.set_theme
   mode: single
+- id: '1595842159751'
+  alias: 'General: Jana is coming home'
+  description: Reduce the volume when Jana comes home
+  trigger:
+  - entity_id: person.jana
+    from: not_home
+    platform: state
+    to: home
+  condition:
+  - condition: device
+    device_id: e945b29ee4bc455b9d3f5dc4703f8a76
+    domain: media_player
+    entity_id: media_player.living_room
+    type: is_playing
+  - condition: device
+    device_id: c8087740ba644f19a97fcf633691c491
+    domain: media_player
+    entity_id: media_player.living_room_2
+    type: is_playing
+  - condition: state
+    entity_id: person.benjamin
+    state: home
+  action:
+  - data:
+      volume_level: '0.10'
+    entity_id: media_player.living_room
+    service: media_player.volume_set
+  - data:
+      volume_level: '0.10'
+    entity_id: media_player.living_room_2
+    service: media_player.volume_set
+  mode: single
