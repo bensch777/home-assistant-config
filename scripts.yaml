@@ -6,18 +6,15 @@ turn_off_everything:
   alias: Turn off everything
   sequence:
   - entity_id: media_player.living_room
-    service: media_player.media_play_pause
+    service: media_player.media_stop
   - entity_id: all
     service: light.turn_off
-  - data: {}
-    entity_id: media_player.living_room_2
-    service: media_player.media_play_pause
-  - data: {}
-    entity_id: media_player.schlafzimmer
-    service: media_player.media_play_pause
-  - data: {}
-    entity_id: media_player.spotify
-    service: media_player.media_play_pause
+  - entity_id: media_player.living_room_2
+    service: media_player.media_stop
+  - entity_id: media_player.schlafzimmer
+    service: media_player.media_stop
+  - entity_id: media_player.spotify
+    service: media_player.media_stop
 arriving:
   alias: Arriving home
   sequence:

@@ -22,3 +22,5 @@ resources:
     type: module
   - url: /local/simple-weather-card-bundle.js?v=0.8.0
     type: module
+  - url: /local/slider-entity-row.js
+    type: module
