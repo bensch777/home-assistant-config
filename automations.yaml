@@ -112,6 +112,9 @@
   action:
   - entity_id: input_boolean.alarm_clock_status
     service: input_boolean.turn_off
+  - data: {}
+    service: script.turn_off_everything
+  mode: single
 - id: '1594631698389'
   alias: 'Vacation mode: auto turn on'
   initial_state: 'on'
