@@ -14,6 +14,7 @@ scene: !include scenes.yaml
 # Others
 binary_sensor: !include includes/binary_sensors.yaml
 device_tracker: !include includes/device_trackers.yaml
+fan: !include includes/fan.yaml
 light: !include includes/lights.yaml
 notify: !include includes/notify.yaml
 sensor: !include includes/sensors.yaml

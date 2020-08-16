@@ -16,6 +16,24 @@
             {{ state_attr("switch.wemo_plug", "current_power_w") | replace(" W", "") | float("Unavailable") }}
         unit_of_measurement: Watt
         friendly_name: Washing machine usage
+    xiaomi_air_purifier_3h_temperature:
+        value_template: >
+            {{ state_attr('fan.xiaomi_air_purifier_3h', 'temperature') }}
+        unit_of_measurement: °C
+        friendly_name: Xiaomi Air Purifier 3h Temperature
+        device_class: "temperature"
+    xiaomi_air_purifier_3h_humidity:
+        value_template: >
+            {{ state_attr('fan.xiaomi_air_purifier_3h', 'humidity') }}
+        unit_of_measurement: "%"
+        friendly_name: Xiaomi Air Purifier 3h Humidity
+        device_class: "humidity"
+    xiaomi_air_purifier_3h_pm25:
+        value_template: >
+            {{ state_attr('fan.xiaomi_air_purifier_3h', 'aqi') }}
+        unit_of_measurement: "μg/m³"
+        friendly_name: Xiaomi Air Purifier 3h Air quality
+        icon_template: "mdi:weather-fog"
 
 - platform: history_stats
   name: Hours washing machine has been on last 7 days

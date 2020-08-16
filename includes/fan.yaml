@@ -1,0 +1,4 @@
+- platform: xiaomi_miio
+  host: !secret ip_fan
+  token: !secret xiaomi_miio_token_fan
+  name: "Xiaomi Air Purifier 3h"
