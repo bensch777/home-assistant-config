@@ -34,6 +34,33 @@
         unit_of_measurement: "μg/m³"
         friendly_name: Xiaomi Air Purifier 3h Air quality
         icon_template: "mdi:weather-fog"
+    timestamp_start_of_today:
+      value_template: >
+        {{ as_timestamp(now().replace(hour=0).replace(minute=0).replace(second=0)) }}
+      unit_of_measurement: "s"
+      entity_id: sensor.date
+    time_at_work_prognosis:
+      value_template: >
+        {% set day = [now().weekday(), 4] | min %}
+        {% set t_total = states("sensor.time_at_work_this_week")|float %}
+        {% set t_today = states("sensor.time_at_work_today")|float %}
+        {% set hours_per_day_including_today = t_total / (day + 1) %}
+        {% set hours_per_day_excluding_today = (t_total - t_today ) / (day + 10**-16) %}
+        {% set seven_oclock = as_timestamp(now().replace(hour=19).replace(minute=0).replace(second=0)) %}
+
+        {% if t_today > hours_per_day_excluding_today
+              or (not is_state("person.benjamin", "Work") and t_today > 0)
+              or (as_timestamp(now()) > seven_oclock)
+              or day == 0
+              or now().weekday() > 4
+              or 5 * hours_per_day_including_today > 40 %}
+          {% set hours_per_day = hours_per_day_including_today %}
+        {% else %}
+          {% set hours_per_day = hours_per_day_excluding_today %}
+        {% endif %}
+
+        {{ (5 * hours_per_day)|round(2) }}
+      unit_of_measurement: h
 
 - platform: history_stats
   name: Hours washing machine has been on last 7 days
@@ -52,3 +79,84 @@
   duration:
     days: 7
   end: "{{ now() }}"
+
+- platform: history_stats
+  name: Time at work this week
+  entity_id: person.benjamin
+  state: Work
+  type: time
+  start: >
+    {{ states("sensor.timestamp_start_of_today")|float - now().weekday() * 86400 }}
+  end: "{{ now() }}"
+
+
+- platform: history_stats
+  name: Time at work today
+  entity_id: person.benjamin
+  state: Work
+  type: time
+  start: >
+    {{ states("sensor.timestamp_start_of_today")|float - 0 * 86400 }}
+  duration:
+    hours: 24
+
+- platform: history_stats
+  name: Time at work on Monday
+  entity_id: person.benjamin
+  state: Work
+  type: time
+  duration:
+    hours: 24
+  start: >
+    {% set day = now().weekday() - 0 %}
+    {% if day < 0 %}{% set day = day + 7 %}{% endif %}
+    {{ states("sensor.timestamp_start_of_today")|float - day * 86400}}
+
+- platform: history_stats
+  name: Time at work on Tuesday
+  entity_id: person.benjamin
+  state: Work
+  type: time
+  duration:
+    hours: 24
+  start: >
+    {% set day = now().weekday() - 1 %}
+    {% if day < 0 %}{% set day = day + 7 %}{% endif %}
+    {{ states("sensor.timestamp_start_of_today")|float - day * 86400}}
+
+- platform: history_stats
+  name: Time at work on Wednessday
+  entity_id: person.benjamin
+  state: Work
+  type: time
+  duration:
+    hours: 24
+  start: >
+    {% set day = now().weekday() - 2 %}
+    {% if day < 0 %}{% set day = day + 7 %}{% endif %}
+    {{ states("sensor.timestamp_start_of_today")|float - day * 86400}}
+
+- platform: history_stats
+  name: Time at work on Thursday
+  entity_id: person.benjamin
+  state: Work
+  type: time
+  duration:
+    hours: 24
+  start: >
+    {% set day = now().weekday() - 3 %}
+    {% if day < 0 %}{% set day = day + 7 %}{% endif %}
+    {{ states("sensor.timestamp_start_of_today")|float - day * 86400}}
+
+- platform: history_stats
+  name: Time at work on Friday
+  entity_id: person.benjamin
+  state: Work
+  type: time
+  duration:
+    hours: 24
+  start: >
+    {% set day = now().weekday() - 4 %}
+    {% if day < 0 %}{% set day = day + 7 %}{% endif %}
+    {{ states("sensor.timestamp_start_of_today")|float - day * 86400}}
+

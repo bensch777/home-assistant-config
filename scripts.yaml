@@ -64,44 +64,6 @@ play_spotify:
       media_content_id: spotify:playlist:{{ playlist }}
       media_content_type: playlist
     service: media_player.play_media
-childown_spotify:
-  alias: 'Bedroom: Play chill down music from Spotify'
-  fields:
-    source:
-      description: Which source to use on the speakers
-      example: Wifi
-  sequence:
-  - data_template:
-      entity_id: media_player.schlafzimmer
-      source: '{{ source }}'
-    service: media_player.select_source
-  - data:
-      shuffle: true
-    entity_id: media_player.schlafzimmer
-    service: media_player.shuffle_set
-  - data_template:
-      entity_id: media_player.schlafzimmer
-      volume_level: 0.1
-    service: media_player.volume_set
-  - data_template:
-      entity_id: media_player.schlafzimmer
-      media_content_id: spotify:playlist:3Y3NX4qhBo5rxvU60MgUoh
-      media_content_type: playlist
-    service: media_player.play_media
-wake_up_with_spotify:
-  alias: 'Bedroom: Play Radio Hamburg'
-  sequence:
-  - data_template:
-      entity_id: media_player.schlafzimmer
-      source: Radio Hamburg
-    service: media_player.select_source
-  - data_template:
-      entity_id: media_player.schlafzimmer
-      volume_level: 0.1
-    service: media_player.volume_set
-  - data_template:
-      entity_id: media_player.schlafzimmer
-    service: media_player.play_media
 
 
 increase_brightness:

@@ -3,3 +3,20 @@ persons:
   entities:
     - person.jana
     - person.benjamin
+
+iphone_bn:
+  - sensor.iphone_bn_activity
+  - sensor.iphone_bn_average_active_pace
+  - sensor.iphone_bn_bssid
+  - sensor.iphone_bn_battery_level
+  - sensor.iphone_bn_battery_state
+  - sensor.iphone_bn_connection_type
+  - sensor.iphone_bn_distance
+  - sensor.iphone_bn_floors_ascended
+  - sensor.iphone_bn_floors_descended
+  - sensor.iphone_bn_geocoded_location
+  - sensor.iphone_bn_last_update_trigger
+  - sensor.iphone_bn_sim_1
+  - sensor.iphone_bn_ssid
+  - sensor.iphone_bn_steps
+  - device_tracker.iphone_bn_2

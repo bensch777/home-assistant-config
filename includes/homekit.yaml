@@ -1,0 +1,26 @@
+filter:
+  exclude_domains:
+    - automation
+    - binary_sensor
+    - device_tracker
+    - input_boolean
+    - light
+    - media_player
+    - persistent_notification
+    - person
+    - script
+    - sensor
+    - sun
+    - switch
+    - zone
+  include_entities:
+    - light.sportzimmerbeleuchtung
+    - light.Schlafzimmerbeleuchtung
+    - light.wohnzimmerbeleuchtung
+    - light.kuchenbeleuchtung
+entity_config:
+  media_player.schlafzimmer:
+    name: Bed room speakers
+    feature_list:
+      - feature: on_off
+      - feature: toggle_mute
