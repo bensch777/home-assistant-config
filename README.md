@@ -26,7 +26,7 @@ Thanks to [Bas Nijholt's](https://github.com/basnijholt/home-assistant-config) f
 
 ### Sensors
 - Xiaomi Aqara Door Sensor
-- Xiaomi Temperature Humidity Sensor (2x)
+- Xiaomi Temperature Humidity Sensor (3x)
 
 ### Lights
 - Philips Hue Go (2. Generation)
