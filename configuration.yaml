@@ -12,6 +12,7 @@ script: !include scripts.yaml
 scene: !include scenes.yaml
 
 # Others
+cloud: !include includes/cloud.yaml
 binary_sensor: !include includes/binary_sensors.yaml
 device_tracker: !include includes/device_trackers.yaml
 fan: !include includes/fan.yaml
