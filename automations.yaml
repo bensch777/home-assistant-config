@@ -287,3 +287,62 @@
       title: Utilities
     service: notify.all_iphones
   mode: single
+- alias: 'Work: go home notification'
+  trigger:
+    platform: state
+    entity_id: binary_sensor.worked_enough_today
+    from: 'off'
+    to: 'on'
+  condition:
+  - condition: state
+    entity_id: binary_sensor.workday_sensor
+    state: 'on'
+  - condition: state
+    entity_id: input_boolean.work_hour_notification_sent
+    state: 'off'
+  action:
+  - service: notify.mobile_app_iphone_bn
+    data:
+      title: Work
+      message: You have worked 8 hours today, very good! Go home 🎉
+  - service: input_boolean.turn_on
+    entity_id: input_boolean.work_hour_notification_sent
+  id: f5657aa03ef649e08af3a756b305764c
+- alias: 'Work: reset input_boolean at midnight'
+  trigger:
+    platform: time
+    at: 00:00
+  condition:
+    condition: state
+    entity_id: input_boolean.work_hour_notification_sent
+    state: 'on'
+  action:
+    service: input_boolean.turn_off
+    entity_id: input_boolean.work_hour_notification_sent
+  id: af9fd22a11674866af521fe4809d2d0a
+- alias: 'Work: Benjamin left work notification for Jana'
+  trigger:
+    platform: state
+    entity_id: person.benjamin
+    from: Work
+  condition:
+    condition: time
+    after: '16:00:00'
+    before: '20:00:00'
+  action:
+    service: notify.mobile_app_iphone
+    data:
+      title: Work
+      message: Benni has left work! ♥️🎉
+  id: 68b82abc4319442b930f8d8e5d7d97f9
+- id: '1600372617083'
+  alias: 'General: Tag turn off everything'
+  description: ''
+  trigger:
+  - platform: tag
+    tag_id: 7e4c2640-ca21-43d4-bf29-67a67eb8cb7c
+  condition: []
+  action:
+  - service: script.turn_off_everything
+    data: {}
+  mode: single
