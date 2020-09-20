@@ -1,0 +1,9 @@
+    xiaomi_air_purifier_3h_mode:
+      name: Mode
+      options:
+        - Auto
+        - Silent
+        - Favorite
+        - Fan
+      initial: Auto
+      icon: mdi:animation-outline

@@ -16,10 +16,12 @@ cloud: !include includes/cloud.yaml
 binary_sensor: !include includes/binary_sensors.yaml
 device_tracker: !include includes/device_trackers.yaml
 fan: !include includes/fan.yaml
+input_select: !include includes/input_select.yaml
 light: !include includes/lights.yaml
 homekit: !include includes/homekit.yaml
 notify: !include includes/notify.yaml
 sensor: !include includes/sensors.yaml
 spotify: !include includes/spotify.yaml
+switch: !include includes/switch.yaml
 group: !include includes/groups.yaml
 vacuum: !include includes/vacuum.yaml

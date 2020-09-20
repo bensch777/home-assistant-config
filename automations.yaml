@@ -346,3 +346,57 @@
   - service: script.turn_off_everything
     data: {}
   mode: single
+- id: '1600624030295'
+  alias: Air Purifier mode change
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: input_select.xiaomi_air_purifier_3h_mode
+  condition: []
+  action:
+  - service: fan.set_speed
+    data:
+      speed: '{{ states(''input_select.xiaomi_air_purifier_3h_mode'') }}'
+    entity_id: fan.xiaomi_air_purifier_3h
+  mode: single
+- id: '1600624273509'
+  alias: Air Purifier turn off
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.xiaomi_air_purifier_3h_pm25
+    below: '5'
+    for: 0:05:00
+  condition:
+  - condition: state
+    entity_id: fan.xiaomi_air_purifier_3h
+    state: 'on'
+  action:
+  - service: fan.turn_off
+    data: {}
+    entity_id: fan.xiaomi_air_purifier_3h
+  mode: single
+- id: '1600624470835'
+  alias: Air Purifier turn on
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.xiaomi_air_purifier_3h_pm25
+    above: '15'
+    for: 0:05:00
+  condition:
+  - condition: state
+    entity_id: fan.xiaomi_air_purifier_3h
+    state: 'off'
+  - condition: state
+    entity_id: input_boolean.vacation_mode
+    state: 'off'
+  action:
+  - data: {}
+    entity_id: fan.xiaomi_air_purifier_3h
+    service: fan.turn_on
+  - data:
+      speed: Auto
+    entity_id: fan.xiaomi_air_purifier_3h
+    service: fan.set_speed
+  mode: single

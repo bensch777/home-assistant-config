@@ -160,3 +160,53 @@
     {% if day < 0 %}{% set day = day + 7 %}{% endif %}
     {{ states("sensor.timestamp_start_of_today")|float - day * 86400}}
 
+- platform: template
+  sensors:
+      xiaomi_air_purifier_3h_avg_air_quality_pm25:
+        friendly_name: "Average air quality (AvgAQI) PM2.5"
+        value_template: "{{ state_attr('fan.xiaomi_air_purifier_3h', 'average_aqi') }}"
+        unit_of_measurement: "μg/m³"
+        icon_template: "mdi:weather-hazy"
+      xiaomi_air_purifier_3h_use_time:
+        friendly_name: "Time used"
+        value_template: >
+            {% macro phrase(value, name) %}
+            {%- set value = value | int %}
+            {%- set end = 's' if value > 1 else '' %}
+            {{- '{} {}{}'.format(value, name, end) if value | int > 0 else '' }}
+            {%- endmacro %}
+            
+            {% set weeks = (state_attr('fan.xiaomi_air_purifier_3h', 'use_time') | int / 604800) | int %}
+            {% set days = ((state_attr('fan.xiaomi_air_purifier_3h', 'use_time') | int - (weeks * 604800)) / 86400) | int %}
+            {% set hours = ((state_attr('fan.xiaomi_air_purifier_3h', 'use_time') | int - (weeks * 604800) - (days * 86400)) / 3600) | int %}
+            {% set minutes = ((state_attr('fan.xiaomi_air_purifier_3h', 'use_time') | int - (weeks * 604800) - (days * 86400) - (hours * 3600)) / 60) | int %}
+            {% set seconds = (state_attr('fan.xiaomi_air_purifier_3h', 'use_time') | int - (weeks * 604800) - (days * 86400) - (hours * 3600) - (minutes*60)) | int %}
+            {{ [ phrase(weeks, 'week'), phrase(days, 'day'), phrase(hours, 'hr'), phrase(minutes, 'min'), phrase(seconds, 'sec') ] | select('!=','') | list | join(', ') }}
+        icon_template: "mdi:heart-pulse"
+      xiaomi_air_purifier_3h_filter_used:
+        friendly_name: "Filter used"
+        value_template: "{{ state_attr('fan.xiaomi_air_purifier_3h', 'filter_hours_used') }}"
+        unit_of_measurement: "hrs"
+        icon_template: "mdi:heart-off"
+      xiaomi_air_purifier_3h_filter_remaining:
+        friendly_name: "Filter remaining"
+        value_template: "{{ state_attr('fan.xiaomi_air_purifier_3h', 'filter_life_remaining') }}"
+        unit_of_measurement: "%"
+        icon_template: "mdi:heart-outline"
+      xiaomi_air_purifier_3h_purify_volume:
+        friendly_name: "Purified volume"
+        value_template: "{{ state_attr('fan.xiaomi_air_purifier_3h', 'purify_volume') }}"
+        unit_of_measurement: "m³"
+        icon_template: "mdi:warehouse"
+      xiaomi_air_purifier_3h_speed:
+        friendly_name: "Motor speed"
+        value_template: "{{ state_attr('fan.xiaomi_air_purifier_3h', 'motor_speed') }}"
+        unit_of_measurement: "rpm"
+        icon_template: "mdi:speedometer"
+      xiaomi_air_purifier_3h_led_brightness:
+        friendly_name: "Led brightness"
+        value_template: "{{ state_attr('fan.xiaomi_air_purifier_3h', 'led_brightness') }}"
+        unit_of_measurement: "lx"
+        icon_template: "mdi:brightness-5"
+
+
