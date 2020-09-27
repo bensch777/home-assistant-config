@@ -20,6 +20,7 @@ input_select: !include includes/input_select.yaml
 light: !include includes/lights.yaml
 homekit: !include includes/homekit.yaml
 notify: !include includes/notify.yaml
+rest_command: !include includes/rest_command.yaml
 sensor: !include includes/sensors.yaml
 spotify: !include includes/spotify.yaml
 switch: !include includes/switch.yaml

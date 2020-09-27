@@ -1,0 +1,5 @@
+  set_strava_weight:
+    url: !secret ifttt_webhook_url
+    method: POST
+    content_type: "application/json"
+    payload: '{"value1":"{{ weight }}"}'

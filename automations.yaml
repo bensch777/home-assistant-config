@@ -56,7 +56,7 @@
   alias: Stop Musik when switching TV on
   description: ''
   trigger:
-  - entity_id: media_player.sony_bravia_tv
+  - entity_id: media_player.kdl_55w755c
     platform: state
     to: 'on'
   condition:
@@ -66,6 +66,7 @@
   - data: {}
     entity_id: media_player.living_room
     service: media_player.media_play_pause
+  mode: single
 - id: '1594380522401'
   alias: 'Security: Door opened but we are not home'
   description: ''
@@ -239,7 +240,7 @@
     device_id: c8087740ba644f19a97fcf633691c491
     domain: media_player
     entity_id: media_player.living_room_2
-    type: is_off
+    type: is_on
   - condition: state
     entity_id: person.benjamin
     state: home
@@ -252,6 +253,10 @@
       volume_level: '0.10'
     entity_id: media_player.living_room_2
     service: media_player.volume_set
+  - service: media_player.select_source
+    data:
+      source: NDR 2 87.6 (Top 40 & Pop Music)
+    entity_id: media_player.living_room
   mode: single
 - id: '1596457636424'
   alias: 'Utilities: washing machine has started'
@@ -375,6 +380,10 @@
   - service: fan.turn_off
     data: {}
     entity_id: fan.xiaomi_air_purifier_3h
+  - service: notify.all_iphones
+    data:
+      message: Air Purifier ausgeschaltet 🛑
+      title: Luftreiniger
   mode: single
 - id: '1600624470835'
   alias: Air Purifier turn on
@@ -382,8 +391,8 @@
   trigger:
   - platform: numeric_state
     entity_id: sensor.xiaomi_air_purifier_3h_pm25
-    above: '15'
     for: 0:05:00
+    above: '25'
   condition:
   - condition: state
     entity_id: fan.xiaomi_air_purifier_3h
@@ -399,4 +408,20 @@
       speed: Auto
     entity_id: fan.xiaomi_air_purifier_3h
     service: fan.set_speed
+  - service: notify.all_iphones
+    data:
+      message: Air Purifier angeschaltet 💨
+      title: Luftreiniger
+  mode: single
+- id: '1601225820971'
+  alias: 'Utilities: Set Strava Weight from Garmin'
+  description: IFTTT Webhook
+  trigger:
+  - platform: state
+    entity_id: sensor.weight
+  condition: []
+  action:
+  - service: rest_command.set_strava_weight
+    data:
+      weight: '{{ states(''sensor.weight'') }}'
   mode: single
