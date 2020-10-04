@@ -52,21 +52,6 @@
       entity_id: media_player.schlafzimmer
       time: '{{ states.input_datetime.alarm_clock_time.state }}'
     service: sonos.update_alarm
-- id: '1594122922256'
-  alias: Stop Musik when switching TV on
-  description: ''
-  trigger:
-  - entity_id: media_player.kdl_55w755c
-    platform: state
-    to: 'on'
-  condition:
-  - condition: template
-    value_template: '{{ is_state("media_player.living_room", "playing") }}'
-  action:
-  - data: {}
-    entity_id: media_player.living_room
-    service: media_player.media_play_pause
-  mode: single
 - id: '1594380522401'
   alias: 'Security: Door opened but we are not home'
   description: ''
