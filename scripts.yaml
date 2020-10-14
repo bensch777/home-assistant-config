@@ -15,6 +15,9 @@ turn_off_everything:
     service: media_player.media_stop
   - entity_id: media_player.spotify
     service: media_player.media_stop
+  - entity_id: media_player.sony_bravia_tv
+    service: media_player.turn_off
+
 arriving:
   alias: Arriving home
   sequence:

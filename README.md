@@ -6,12 +6,15 @@ Thanks to [Bas Nijholt's](https://github.com/basnijholt/home-assistant-config) f
 ![Lovelace UI](https://www.laufmix.de/wp-content/uploads/2020/08/hassio.png)
 
 ## Automations
-- Living Room: Stop Musik when switching TV on
-- Security: Door opened but we are not home
+
 - General: Set theme at startup for all users
 - General: Reduce the volume when Jana comes home
 - General: Send notification when washing machine is done
-- General: Vacation mode for disabling things 
+- General: Vacation mode for disabling things#
+- Security: Door opened but we are not home
+- Work: Go home notifications
+- Work: Benjamin left work notification for Jana
+- Utilities: Automatic (Switch On/OF) air purifier
 
 ## My devices
 

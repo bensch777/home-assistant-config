@@ -204,7 +204,7 @@
   condition: []
   action:
   - data:
-      name: ios-dark-mode
+      name: ios-dark-mode-blue-red
     service: frontend.set_theme
   mode: single
 - id: '1595842159751'
@@ -409,4 +409,34 @@
   - service: rest_command.set_strava_weight
     data:
       weight: '{{ states(''sensor.weight'') }}'
+  mode: single
+- id: '1601814844875'
+  alias: Tag 7e4c2640-ca21-43d4-bf29-67a67eb8cb7c is scanned
+  description: ''
+  trigger:
+  - platform: tag
+    tag_id: 7e4c2640-ca21-43d4-bf29-67a67eb8cb7c
+  condition: []
+  action:
+  - service: script.turn_off_everything
+    data: {}
+  mode: single
+- id: '1602260519154'
+  alias: 'Utilities: Stop Music when switching on tv'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: media_player.sony_bravia_tv
+    from: 'off'
+    to: 'on'
+  condition:
+  - condition: device
+    device_id: e945b29ee4bc455b9d3f5dc4703f8a76
+    domain: media_player
+    entity_id: media_player.living_room
+    type: is_playing
+  action:
+  - service: media_player.media_stop
+    data: {}
+    entity_id: media_player.living_room
   mode: single
