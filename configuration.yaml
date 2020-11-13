@@ -18,7 +18,7 @@ device_tracker: !include includes/device_trackers.yaml
 fan: !include includes/fan.yaml
 input_select: !include includes/input_select.yaml
 light: !include includes/lights.yaml
-homekit: !include includes/homekit.yaml
+# homekit: !include includes/homekit.yaml
 notify: !include includes/notify.yaml
 rest_command: !include includes/rest_command.yaml
 sensor: !include includes/sensors.yaml
