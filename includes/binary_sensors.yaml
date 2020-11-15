@@ -1,22 +1,22 @@
 - platform: template
   sensors:
     washing_machine:
-     friendly_name: Washing machine
-     value_template: >
-       {{ states("sensor.washing_machine_watts") | float(0) > 3 }}
-     delay_off: "00:05:00"
-     icon_template: >
-       {% if is_state("binary_sensor.washing_machine", "on") %}
-         mdi:washing-machine
-       {% else %}
-         mdi:washing-machine-off
-       {% endif %}
+      friendly_name: Washing machine
+      value_template: >
+        {{ states("sensor.washing_machine_watts") | float(0) > 3 }}
+      delay_off: "00:05:00"
+      icon_template: >
+        {% if is_state("binary_sensor.washing_machine", "on") %}
+          mdi:washing-machine
+        {% else %}
+          mdi:washing-machine-off
+        {% endif %}
     worked_enough_today:
       friendly_name: Worked enough today
       value_template: >
         {{ states("sensor.time_at_work_today") | float(0) > 8 }}
       icon_template: mdi:work
-      
+
     someone_showering:
       friendly_name: Someone is showering
       value_template: >
@@ -36,17 +36,12 @@
         {{ is_state("binary_sensor.motion_detected", "on") }}
       delay_off: "01:00:00"
 
-
     activity_in_bathroom:
       friendly_name: Activity in the bathroom
       value_template: >
         {{ is_state("binary_sensor.tradfri_motion_sensor", "on")
             or is_state("binary_sensor.someone_showering", "on") }}
       delay_off: "00:03:00"
-
-
-
-
 
 - platform: workday
   country: DE

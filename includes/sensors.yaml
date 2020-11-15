@@ -12,28 +12,28 @@
 - platform: template
   sensors:
     washing_machine_watts:
-        value_template: >
-            {{ state_attr("switch.wemo_plug", "current_power_w") | replace(" W", "") | float("Unavailable") }}
-        unit_of_measurement: Watt
-        friendly_name: Washing machine usage
+      value_template: >
+        {{ state_attr("switch.wemo_plug", "current_power_w") | replace(" W", "") | float("Unavailable") }}
+      unit_of_measurement: Watt
+      friendly_name: Washing machine usage
     xiaomi_air_purifier_3h_temperature:
-        value_template: >
-            {{ state_attr('fan.xiaomi_air_purifier_3h', 'temperature') }}
-        unit_of_measurement: °C
-        friendly_name: Xiaomi Air Purifier 3h Temperature
-        device_class: "temperature"
+      value_template: >
+        {{ state_attr('fan.xiaomi_air_purifier_3h', 'temperature') }}
+      unit_of_measurement: °C
+      friendly_name: Xiaomi Air Purifier 3h Temperature
+      device_class: "temperature"
     xiaomi_air_purifier_3h_humidity:
-        value_template: >
-            {{ state_attr('fan.xiaomi_air_purifier_3h', 'humidity') }}
-        unit_of_measurement: "%"
-        friendly_name: Xiaomi Air Purifier 3h Humidity
-        device_class: "humidity"
+      value_template: >
+        {{ state_attr('fan.xiaomi_air_purifier_3h', 'humidity') }}
+      unit_of_measurement: "%"
+      friendly_name: Xiaomi Air Purifier 3h Humidity
+      device_class: "humidity"
     xiaomi_air_purifier_3h_pm25:
-        value_template: >
-            {{ state_attr('fan.xiaomi_air_purifier_3h', 'aqi') }}
-        unit_of_measurement: "μg/m³"
-        friendly_name: Xiaomi Air Purifier 3h Air quality
-        icon_template: "mdi:weather-fog"
+      value_template: >
+        {{ state_attr('fan.xiaomi_air_purifier_3h', 'aqi') }}
+      unit_of_measurement: "μg/m³"
+      friendly_name: Xiaomi Air Purifier 3h Air quality
+      icon_template: "mdi:weather-fog"
     timestamp_start_of_today:
       value_template: >
         {{ as_timestamp(now().replace(hour=0).replace(minute=0).replace(second=0)) }}
@@ -61,6 +61,26 @@
 
         {{ (5 * hours_per_day)|round(2) }}
       unit_of_measurement: h
+    hours_outside_per_day_jana: # XXX: fails when returns "0m"
+      friendly_name: Hours outside per day jana
+      value_template: >
+        {% set value = state_attr("sensor.quarantine_meter_jana", "value") %}
+        {% if value != None %}
+        {% set d, h, m = value.split() %}
+        {% set d, h, m = d[:-1] | int, h[:-1] | int, m[:-1] | int %}
+        {% set hours_outside = ((14 - d) * 86400 - h * 3600 - m * 60) / 3600 %}
+        {{ (hours_outside / 14) | round(1) }}
+        {% endif %}
+    hours_outside_per_day_benjamin: # XXX: fails when returns "0m"
+      friendly_name: Hours outside per day benjamin
+      value_template: >
+        {% set value = state_attr("sensor.quarantine_meter_benjamin", "value") %}
+        {% if value != None %}
+        {% set d, h, m = value.split() %}
+        {% set d, h, m = d[:-1] | int, h[:-1] | int, m[:-1] | int %}
+        {% set hours_outside = ((14 - d) * 86400 - h * 3600 - m * 60) / 3600 %}
+        {{ (hours_outside / 14) | round(1) }}
+        {% endif %}
 
 - platform: history_stats
   name: Hours washing machine has been on last 7 days
@@ -160,53 +180,126 @@
     {% if day < 0 %}{% set day = day + 7 %}{% endif %}
     {{ states("sensor.timestamp_start_of_today")|float - day * 86400}}
 
+- platform: history_stats
+  name: Hours TV has been on last 7 days
+  entity_id: media_player.sony_bravia_tv
+  state: "on"
+  type: time
+  duration:
+    days: 7
+  end: "{{ now() }}"
+
+- platform: history_stats
+  name: Times TV has been on last 7 days
+  entity_id: media_player.sony_bravia_tv
+  state: "on"
+  type: count
+  duration:
+    days: 7
+  end: "{{ now() }}"
+
+## XIAOMI
+
 - platform: template
   sensors:
-      xiaomi_air_purifier_3h_avg_air_quality_pm25:
-        friendly_name: "Average air quality (AvgAQI) PM2.5"
-        value_template: "{{ state_attr('fan.xiaomi_air_purifier_3h', 'average_aqi') }}"
-        unit_of_measurement: "μg/m³"
-        icon_template: "mdi:weather-hazy"
-      xiaomi_air_purifier_3h_use_time:
-        friendly_name: "Time used"
-        value_template: >
-            {% macro phrase(value, name) %}
-            {%- set value = value | int %}
-            {%- set end = 's' if value > 1 else '' %}
-            {{- '{} {}{}'.format(value, name, end) if value | int > 0 else '' }}
-            {%- endmacro %}
-            
-            {% set weeks = (state_attr('fan.xiaomi_air_purifier_3h', 'use_time') | int / 604800) | int %}
-            {% set days = ((state_attr('fan.xiaomi_air_purifier_3h', 'use_time') | int - (weeks * 604800)) / 86400) | int %}
-            {% set hours = ((state_attr('fan.xiaomi_air_purifier_3h', 'use_time') | int - (weeks * 604800) - (days * 86400)) / 3600) | int %}
-            {% set minutes = ((state_attr('fan.xiaomi_air_purifier_3h', 'use_time') | int - (weeks * 604800) - (days * 86400) - (hours * 3600)) / 60) | int %}
-            {% set seconds = (state_attr('fan.xiaomi_air_purifier_3h', 'use_time') | int - (weeks * 604800) - (days * 86400) - (hours * 3600) - (minutes*60)) | int %}
-            {{ [ phrase(weeks, 'week'), phrase(days, 'day'), phrase(hours, 'hr'), phrase(minutes, 'min'), phrase(seconds, 'sec') ] | select('!=','') | list | join(', ') }}
-        icon_template: "mdi:heart-pulse"
-      xiaomi_air_purifier_3h_filter_used:
-        friendly_name: "Filter used"
-        value_template: "{{ state_attr('fan.xiaomi_air_purifier_3h', 'filter_hours_used') }}"
-        unit_of_measurement: "hrs"
-        icon_template: "mdi:heart-off"
-      xiaomi_air_purifier_3h_filter_remaining:
-        friendly_name: "Filter remaining"
-        value_template: "{{ state_attr('fan.xiaomi_air_purifier_3h', 'filter_life_remaining') }}"
-        unit_of_measurement: "%"
-        icon_template: "mdi:heart-outline"
-      xiaomi_air_purifier_3h_purify_volume:
-        friendly_name: "Purified volume"
-        value_template: "{{ state_attr('fan.xiaomi_air_purifier_3h', 'purify_volume') }}"
-        unit_of_measurement: "m³"
-        icon_template: "mdi:warehouse"
-      xiaomi_air_purifier_3h_speed:
-        friendly_name: "Motor speed"
-        value_template: "{{ state_attr('fan.xiaomi_air_purifier_3h', 'motor_speed') }}"
-        unit_of_measurement: "rpm"
-        icon_template: "mdi:speedometer"
-      xiaomi_air_purifier_3h_led_brightness:
-        friendly_name: "Led brightness"
-        value_template: "{{ state_attr('fan.xiaomi_air_purifier_3h', 'led_brightness') }}"
-        unit_of_measurement: "lx"
-        icon_template: "mdi:brightness-5"
+    xiaomi_air_purifier_3h_avg_air_quality_pm25:
+      friendly_name: "Average air quality (AvgAQI) PM2.5"
+      value_template: "{{ state_attr('fan.xiaomi_air_purifier_3h', 'average_aqi') }}"
+      unit_of_measurement: "μg/m³"
+      icon_template: "mdi:weather-hazy"
+    xiaomi_air_purifier_3h_use_time:
+      friendly_name: "Time used"
+      value_template: >
+        {% macro phrase(value, name) %}
+        {%- set value = value | int %}
+        {%- set end = 's' if value > 1 else '' %}
+        {{- '{} {}{}'.format(value, name, end) if value | int > 0 else '' }}
+        {%- endmacro %}
+
+        {% set weeks = (state_attr('fan.xiaomi_air_purifier_3h', 'use_time') | int / 604800) | int %}
+        {% set days = ((state_attr('fan.xiaomi_air_purifier_3h', 'use_time') | int - (weeks * 604800)) / 86400) | int %}
+        {% set hours = ((state_attr('fan.xiaomi_air_purifier_3h', 'use_time') | int - (weeks * 604800) - (days * 86400)) / 3600) | int %}
+        {% set minutes = ((state_attr('fan.xiaomi_air_purifier_3h', 'use_time') | int - (weeks * 604800) - (days * 86400) - (hours * 3600)) / 60) | int %}
+        {% set seconds = (state_attr('fan.xiaomi_air_purifier_3h', 'use_time') | int - (weeks * 604800) - (days * 86400) - (hours * 3600) - (minutes*60)) | int %}
+        {{ [ phrase(weeks, 'week'), phrase(days, 'day'), phrase(hours, 'hr'), phrase(minutes, 'min'), phrase(seconds, 'sec') ] | select('!=','') | list | join(', ') }}
+      icon_template: "mdi:heart-pulse"
+    xiaomi_air_purifier_3h_filter_used:
+      friendly_name: "Filter used"
+      value_template: "{{ state_attr('fan.xiaomi_air_purifier_3h', 'filter_hours_used') }}"
+      unit_of_measurement: "hrs"
+      icon_template: "mdi:heart-off"
+    xiaomi_air_purifier_3h_filter_remaining:
+      friendly_name: "Filter remaining"
+      value_template: "{{ state_attr('fan.xiaomi_air_purifier_3h', 'filter_life_remaining') }}"
+      unit_of_measurement: "%"
+      icon_template: "mdi:heart-outline"
+    xiaomi_air_purifier_3h_purify_volume:
+      friendly_name: "Purified volume"
+      value_template: "{{ state_attr('fan.xiaomi_air_purifier_3h', 'purify_volume') }}"
+      unit_of_measurement: "m³"
+      icon_template: "mdi:warehouse"
+    xiaomi_air_purifier_3h_speed:
+      friendly_name: "Motor speed"
+      value_template: "{{ state_attr('fan.xiaomi_air_purifier_3h', 'motor_speed') }}"
+      unit_of_measurement: "rpm"
+      icon_template: "mdi:speedometer"
+    xiaomi_air_purifier_3h_led_brightness:
+      friendly_name: "Led brightness"
+      value_template: "{{ state_attr('fan.xiaomi_air_purifier_3h', 'led_brightness') }}"
+      unit_of_measurement: "lx"
+      icon_template: "mdi:brightness-5"
+
+
+- platform: statistics
+  name: Humidity bathroom stats
+  entity_id: sensor.humidity_bathroom
+  sampling_size: 86400 # make sure all data points of the last 24hrs are included
+  max_age: "24:00:00"
+
+- platform: derivative
+  source: sensor.humidity_bathroom
+  name: Humidity bathroom derivative
+  unit_time: min
+  time_window: "00:10:00"
+
+
+- platform: history_stats
+  name: Quarantine meter Benjamin
+  entity_id: person.benjamin
+  state: "home"
+  type: ratio
+  duration:
+    days: 14
+  end: "{{ now() }}"
+
+- platform: history_stats
+  name: Quarantine meter Jana
+  entity_id: person.jana
+  state: "home"
+  type: ratio
+  duration:
+    days: 14
+  end: "{{ now() }}"
+
+- platform: history_stats
+  name: Quarantine meter Benjamin times left
+  entity_id: person.benjamin
+  state: "home"
+  type: count
+  duration:
+    days: 14
+  end: "{{ now() }}"
+
+- platform: history_stats
+  name: Quarantine meter Jana times left
+  entity_id: person.jana
+  state: "home"
+  type: count
+  duration:
+    days: 14
+  end: "{{ now() }}"
+
+
+
 
 
