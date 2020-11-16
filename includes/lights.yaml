@@ -17,8 +17,12 @@
     - light.hue_color_spot_1
     - light.hue_color_spot_2
     - light.hue_color_spot_3
+    - light.color_temperature_light_16
+- platform: switch
+  name: SchlafzimmerLichterkette
+  entity_id: switch.configuration_tool_1
 - platform: group
   name: Schlafzimmerbeleuchtung
   entities:
-    - light.hue_white_lamp_2
     - light.hue_ambiance_candle_1
+    - light.schlafzimmerlichterkette

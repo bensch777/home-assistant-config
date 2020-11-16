@@ -1,36 +1,36 @@
 - id: '1594023890815'
   alias: 'Alarm clock: wake up with Spotify'
   trigger:
-    - platform: template
-      value_template: '{{ states(''sensor.time'') == (state_attr(''input_datetime.alarm_clock'',
+  - platform: template
+    value_template: '{{ states(''sensor.time'') == (state_attr(''input_datetime.alarm_clock'',
       ''timestamp'') | int | timestamp_custom(''%H:%M'', False)) }}'
   condition:
-    - condition: state
-      entity_id: input_boolean.alarm_clock
-      state: 'on'
+  - condition: state
+    entity_id: input_boolean.alarm_clock
+    state: 'on'
   action:
-    - entity_id: input_boolean.alarm_clock
-      service: input_boolean.turn_off
-    - entity_id: input_boolean.wake_up_with_spotify
-      service: script.wake_up_with_spotify
+  - entity_id: input_boolean.alarm_clock
+    service: input_boolean.turn_off
+  - entity_id: input_boolean.wake_up_with_spotify
+    service: script.wake_up_with_spotify
 - id: 52b07f8689be4ab39d46f75410a4267a
   alias: 'Sonos: Set alarm'
   trigger:
-    - entity_id: input_boolean.alarm_clock_status
-      platform: state
-      to: 'on'
+  - entity_id: input_boolean.alarm_clock_status
+    platform: state
+    to: 'on'
   action:
-    - data_template:
-        alarm_id: 1469
-        enabled: true
-        entity_id: media_player.schlafzimmer
-        time: '{{ states.input_datetime.alarm_clock_time.state }}'
-      service: sonos.update_alarm
+  - data_template:
+      alarm_id: 1469
+      enabled: true
+      entity_id: media_player.schlafzimmer
+      time: '{{ states.input_datetime.alarm_clock_time.state }}'
+    service: sonos.update_alarm
 - alias: 'Sonos: Disable alarm'
   trigger:
-    - platform: state
-      entity_id: input_boolean.alarm_clock_status
-      to: 'off'
+  - platform: state
+    entity_id: input_boolean.alarm_clock_status
+    to: 'off'
   action:
     service: sonos.update_alarm
     data_template:
@@ -42,240 +42,238 @@
   alias: 'Sonos: Set alarm time'
   description: ''
   trigger:
-    - entity_id: input_datetime.alarm_clock_time
-      platform: state
-  condition: [ ]
+  - entity_id: input_datetime.alarm_clock_time
+    platform: state
+  condition: []
   action:
-    - delay: 00:00:20
-    - data_template:
-        alarm_id: 1469
-        entity_id: media_player.schlafzimmer
-        time: '{{ states.input_datetime.alarm_clock_time.state }}'
-      service: sonos.update_alarm
+  - delay: 00:00:20
+  - data_template:
+      alarm_id: 1469
+      entity_id: media_player.schlafzimmer
+      time: '{{ states.input_datetime.alarm_clock_time.state }}'
+    service: sonos.update_alarm
 - id: '1594380522401'
   alias: 'Security: Door opened but we are not home'
   description: ''
   trigger:
-    - entity_id: binary_sensor.openclose_4
-      from: 'off'
-      platform: state
-      to: 'on'
+  - entity_id: binary_sensor.openclose_4
+    from: 'off'
+    platform: state
+    to: 'on'
   condition:
-    - condition: state
-      entity_id: group.persons
-      state: not_home
+  - condition: state
+    entity_id: group.persons
+    state: not_home
   action:
-    - data:
-        data:
-          category: sound_alarm
-          push:
-        message: 'Security: open door is detected, but we are not home.'
-      service: notify.all_iphones
-- id: '1594389606219'
-  alias: 'Helper: Door opened last time'
-  description: ''
-  trigger:
-    - entity_id: binary_sensor.openclose_4
-      from: 'off'
-      platform: state
-      to: 'on'
-  condition: [ ]
-  action:
-    - data_template:
-        date: '{{ (as_timestamp(now()) | timestamp_custom("%Y-%m-%d", true)) }}'
-        entity_id: input_datetime.door_last_opened
-        time: '{{ (as_timestamp(now()) | timestamp_custom("%H:%M:%S", true)) }}'
-      service: input_datetime.set_datetime
+  - data:
+      message: 'Security: open door is detected, but we are not home.'
+      data:
+        push:
+          category: alarm
+    service: notify.all_iphones
+  - wait_for_trigger:
+      platform: event
+      event_type: ios.notification_action_fired
+      event_data:
+        actionName: SOUND_ALARM
+    timeout: 01:00:00
+    continue_on_timeout: false
+  - service: light.turn_on
+    entity_id: all
+    data:
+      flash: long
+      color_name: red
+  mode: single
 - id: '1594631215761'
   alias: Vacation Mode
   description: Vacation Mode
   trigger:
-    - entity_id: input_boolean.vacation_mode
-      from: 'off'
-      platform: state
-      to: 'on'
-  condition: [ ]
+  - entity_id: input_boolean.vacation_mode
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition: []
   action:
-    - entity_id: input_boolean.alarm_clock_status
-      service: input_boolean.turn_off
-    - data: { }
-      service: script.turn_off_everything
+  - entity_id: input_boolean.alarm_clock_status
+    service: input_boolean.turn_off
+  - data: {}
+    service: script.turn_off_everything
   mode: single
 - id: '1594631698389'
   alias: 'Vacation mode: auto turn on'
   initial_state: 'on'
   description: ''
   trigger:
-    - entity_id: group.persons
-      for: '24:00:00'
-      from: home
-      platform: state
-      to: not_home
-  condition: [ ]
+  - entity_id: group.persons
+    for: '24:00:00'
+    from: home
+    platform: state
+    to: not_home
+  condition: []
   action:
-    - entity_id: input_boolean.vacation_mode
-      service: input_boolean.turn_on
-    - data:
-        message: No one at home for 24 hours, switching on vacation mode.
-        title: Vacation mode
-      service: notify.all_iphones
+  - entity_id: input_boolean.vacation_mode
+    service: input_boolean.turn_on
+  - data:
+      message: No one at home for 24 hours, switching on vacation mode.
+      title: Vacation mode
+    service: notify.all_iphones
 - id: '1594631785192'
   alias: 'Vacation mode: auto turn off'
   initial_state: 'on'
   description: ''
   trigger:
-    - entity_id: group.persons
-      from: not_home
-      platform: state
-      to: home
+  - entity_id: group.persons
+    from: not_home
+    platform: state
+    to: home
   condition:
-    - condition: state
-      entity_id: input_boolean.vacation_mode
-      state: 'on'
+  - condition: state
+    entity_id: input_boolean.vacation_mode
+    state: 'on'
   action:
-    - entity_id: input_boolean.vacation_mode
-      service: input_boolean.turn_off
-    - data:
-        message: Welcome back! Switching off the vacation mode.
-        title: Vacation mode
-      service: notify.all_iphones
+  - entity_id: input_boolean.vacation_mode
+    service: input_boolean.turn_off
+  - data:
+      message: Welcome back! Switching off the vacation mode.
+      title: Vacation mode
+    service: notify.all_iphones
 - id: '1595754875510'
   alias: 'Schlafzimmer - Hue Dimmer: Light on'
   description: ''
   trigger:
-    - device_id: fb41032420324dd5b3a7ac88cedb2fb9
-      domain: deconz
-      platform: device
-      subtype: turn_on
-      type: remote_button_short_press
-  condition: [ ]
+  - device_id: fb41032420324dd5b3a7ac88cedb2fb9
+    domain: deconz
+    platform: device
+    subtype: turn_on
+    type: remote_button_short_press
+  condition: []
   action:
-    - data: { }
-      entity_id: switch.configuration_tool_1
-      service: switch.turn_on
-    - data: { }
-      entity_id: light.schlafzimmerbeleuchtung
-      service: light.turn_on
+  - data: {}
+    entity_id: switch.configuration_tool_1
+    service: switch.turn_on
+  - data: {}
+    entity_id: light.schlafzimmerbeleuchtung
+    service: light.turn_on
   mode: single
 - id: '1595755790532'
   alias: 'Schlafzimmer - Hue Dimmer: Light off'
   description: ''
   trigger:
-    - device_id: fb41032420324dd5b3a7ac88cedb2fb9
-      domain: deconz
-      platform: device
-      subtype: turn_off
-      type: remote_button_short_press
-  condition: [ ]
+  - device_id: fb41032420324dd5b3a7ac88cedb2fb9
+    domain: deconz
+    platform: device
+    subtype: turn_off
+    type: remote_button_short_press
+  condition: []
   action:
-    - data: { }
-      entity_id: light.schlafzimmerbeleuchtung
-      service: light.turn_off
-    - data: { }
-      entity_id: switch.configuration_tool_1
-      service: switch.turn_off
+  - data: {}
+    entity_id: light.schlafzimmerbeleuchtung
+    service: light.turn_off
+  - data: {}
+    entity_id: switch.configuration_tool_1
+    service: switch.turn_off
   mode: single
 - id: '1595757412339'
   alias: Schlafzimmer Hue Dimmer - Brightness
   description: ''
   trigger:
-    - device_id: fb41032420324dd5b3a7ac88cedb2fb9
-      domain: deconz
-      platform: device
-      subtype: dim_up
-      type: remote_button_short_press
-    - device_id: fb41032420324dd5b3a7ac88cedb2fb9
-      domain: deconz
-      platform: device
-      subtype: dim_down
-      type: remote_button_short_press
-  condition: [ ]
+  - device_id: fb41032420324dd5b3a7ac88cedb2fb9
+    domain: deconz
+    platform: device
+    subtype: dim_up
+    type: remote_button_short_press
+  - device_id: fb41032420324dd5b3a7ac88cedb2fb9
+    domain: deconz
+    platform: device
+    subtype: dim_down
+    type: remote_button_short_press
+  condition: []
   action:
-    - data:
-        group: light.schlafzimmerbeleuchtung
-      service: script.increase_brightness
+  - data:
+      group: light.schlafzimmerbeleuchtung
+    service: script.increase_brightness
   mode: single
 - id: '1595841289664'
   alias: 'General: Set theme at startup'
   description: ''
   trigger:
-    - event: start
-      platform: homeassistant
-  condition: [ ]
+  - event: start
+    platform: homeassistant
+  condition: []
   action:
-    - data:
-        name: ios-dark-mode-blue-red
-      service: frontend.set_theme
+  - data:
+      name: ios-dark-mode-blue-red
+    service: frontend.set_theme
   mode: single
 - id: '1595842159751'
   alias: 'General: Jana is coming home'
   description: Reduce the volume when Jana comes home
   trigger:
-    - entity_id: person.jana
-      from: not_home
-      platform: state
-      to: home
+  - entity_id: person.jana
+    from: not_home
+    platform: state
+    to: home
   condition:
-    - condition: device
-      device_id: e945b29ee4bc455b9d3f5dc4703f8a76
-      domain: media_player
-      entity_id: media_player.living_room
-      type: is_on
-    - condition: device
-      device_id: c8087740ba644f19a97fcf633691c491
-      domain: media_player
-      entity_id: media_player.living_room_2
-      type: is_on
-    - condition: state
-      entity_id: person.benjamin
-      state: home
+  - condition: device
+    device_id: e945b29ee4bc455b9d3f5dc4703f8a76
+    domain: media_player
+    entity_id: media_player.living_room
+    type: is_on
+  - condition: device
+    device_id: c8087740ba644f19a97fcf633691c491
+    domain: media_player
+    entity_id: media_player.living_room_2
+    type: is_on
+  - condition: state
+    entity_id: person.benjamin
+    state: home
   action:
-    - data:
-        volume_level: '0.10'
-      entity_id: media_player.living_room
-      service: media_player.volume_set
-    - data:
-        volume_level: '0.10'
-      entity_id: media_player.living_room_2
-      service: media_player.volume_set
-    - service: media_player.select_source
-      data:
-        source: NDR 2 87.6 (Top 40 & Pop Music)
-      entity_id: media_player.living_room
+  - data:
+      volume_level: '0.10'
+    entity_id: media_player.living_room
+    service: media_player.volume_set
+  - data:
+      volume_level: '0.10'
+    entity_id: media_player.living_room_2
+    service: media_player.volume_set
+  - service: media_player.select_source
+    data:
+      source: NDR 2 87.6 (Top 40 & Pop Music)
+    entity_id: media_player.living_room
   mode: single
 - id: '1596457636424'
   alias: 'Utilities: washing machine has started'
   description: ''
   trigger:
-    - entity_id: binary_sensor.washing_machine
-      from: 'off'
-      platform: state
-      to: 'on'
-  condition: [ ]
+  - entity_id: binary_sensor.washing_machine
+    from: 'off'
+    platform: state
+    to: 'on'
+  condition: []
   action:
-    - data_template:
-        datetime: '{{ now().strftime(''%Y-%m-%d %H:%M:%S'') }}'
-      entity_id: input_datetime.washing_machine_started
-      service: input_datetime.set_datetime
+  - data_template:
+      datetime: '{{ now().strftime(''%Y-%m-%d %H:%M:%S'') }}'
+    entity_id: input_datetime.washing_machine_started
+    service: input_datetime.set_datetime
   mode: single
 - id: '1596457795706'
   alias: 'Utilities: washing machine is done'
   description: ''
   trigger:
-    - entity_id: binary_sensor.washing_machine
-      from: 'on'
-      platform: state
-      to: 'off'
-  condition: [ ]
+  - entity_id: binary_sensor.washing_machine
+    from: 'on'
+    platform: state
+    to: 'off'
+  condition: []
   action:
-    - data_template:
-        datetime: '{{ now().strftime(''%Y-%m-%d %H:%M:%S'') }}'
-      entity_id: input_datetime.washing_machine_done
-      service: input_datetime.set_datetime
-    - data:
-        message: Washing machine is done 👚👕
-        title: Utilities
-      service: notify.all_iphones
+  - data_template:
+      datetime: '{{ now().strftime(''%Y-%m-%d %H:%M:%S'') }}'
+    entity_id: input_datetime.washing_machine_done
+    service: input_datetime.set_datetime
+  - data:
+      message: Washing machine is done 👚👕
+      title: Utilities
+    service: notify.all_iphones
   mode: single
 - alias: 'Work: go home notification'
   trigger:
@@ -284,19 +282,19 @@
     from: 'off'
     to: 'on'
   condition:
-    - condition: state
-      entity_id: binary_sensor.workday_sensor
-      state: 'on'
-    - condition: state
-      entity_id: input_boolean.work_hour_notification_sent
-      state: 'off'
+  - condition: state
+    entity_id: binary_sensor.workday_sensor
+    state: 'on'
+  - condition: state
+    entity_id: input_boolean.work_hour_notification_sent
+    state: 'off'
   action:
-    - service: notify.mobile_app_iphone_bn
-      data:
-        title: Work
-        message: You have worked 8 hours today, very good! Go home 🎉
-    - service: input_boolean.turn_on
-      entity_id: input_boolean.work_hour_notification_sent
+  - service: notify.mobile_app_iphone_bn
+    data:
+      title: Work
+      message: You have worked 8 hours today, very good! Go home 🎉
+  - service: input_boolean.turn_on
+    entity_id: input_boolean.work_hour_notification_sent
   id: f5657aa03ef649e08af3a756b305764c
 - alias: 'Work: reset input_boolean at midnight'
   trigger:
@@ -329,103 +327,187 @@
   alias: 'General: Tag turn off everything'
   description: ''
   trigger:
-    - platform: tag
-      tag_id: 7e4c2640-ca21-43d4-bf29-67a67eb8cb7c
-  condition: [ ]
+  - platform: tag
+    tag_id: 7e4c2640-ca21-43d4-bf29-67a67eb8cb7c
+  condition: []
   action:
-    - service: script.turn_off_everything
-      data: { }
+  - service: script.turn_off_everything
+    data: {}
   mode: single
 - id: '1600624030295'
   alias: Air Purifier mode change
   description: ''
   trigger:
-    - platform: state
-      entity_id: input_select.xiaomi_air_purifier_3h_mode
-  condition: [ ]
+  - platform: state
+    entity_id: input_select.xiaomi_air_purifier_3h_mode
+  condition: []
   action:
-    - service: fan.set_speed
-      data:
-        speed: '{{ states(''input_select.xiaomi_air_purifier_3h_mode'') }}'
-      entity_id: fan.xiaomi_air_purifier_3h
+  - service: fan.set_speed
+    data:
+      speed: '{{ states(''input_select.xiaomi_air_purifier_3h_mode'') }}'
+    entity_id: fan.xiaomi_air_purifier_3h
   mode: single
 - id: '1600624273509'
   alias: Air Purifier turn off
   description: ''
   trigger:
-    - platform: numeric_state
-      entity_id: sensor.xiaomi_air_purifier_3h_pm25
-      below: '5'
-      for: 0:05:00
+  - platform: numeric_state
+    entity_id: sensor.xiaomi_air_purifier_3h_pm25
+    below: '5'
+    for: 0:05:00
   condition:
-    - condition: state
-      entity_id: fan.xiaomi_air_purifier_3h
-      state: 'on'
+  - condition: state
+    entity_id: fan.xiaomi_air_purifier_3h
+    state: 'on'
   action:
-    - service: fan.turn_off
-      data: { }
-      entity_id: fan.xiaomi_air_purifier_3h
-    - service: notify.all_iphones
-      data:
-        message: Air Purifier ausgeschaltet 🛑
-        title: Luftreiniger
+  - service: fan.turn_off
+    data: {}
+    entity_id: fan.xiaomi_air_purifier_3h
+  - service: notify.all_iphones
+    data:
+      message: Air Purifier ausgeschaltet 🛑
+      title: Luftreiniger
   mode: single
 - id: '1600624470835'
   alias: Air Purifier turn on
   description: ''
   trigger:
-    - platform: numeric_state
-      entity_id: sensor.xiaomi_air_purifier_3h_pm25
-      for: 0:05:00
-      above: '25'
+  - platform: numeric_state
+    entity_id: sensor.xiaomi_air_purifier_3h_pm25
+    for: 0:05:00
+    above: '25'
   condition:
-    - condition: state
-      entity_id: fan.xiaomi_air_purifier_3h
-      state: 'off'
-    - condition: state
-      entity_id: input_boolean.vacation_mode
-      state: 'off'
+  - condition: state
+    entity_id: fan.xiaomi_air_purifier_3h
+    state: 'off'
+  - condition: state
+    entity_id: input_boolean.vacation_mode
+    state: 'off'
   action:
-    - data: { }
-      entity_id: fan.xiaomi_air_purifier_3h
-      service: fan.turn_on
-    - data:
-        speed: Auto
-      entity_id: fan.xiaomi_air_purifier_3h
-      service: fan.set_speed
-    - service: notify.all_iphones
-      data:
-        message: Air Purifier angeschaltet 💨
-        title: Luftreiniger
+  - data: {}
+    entity_id: fan.xiaomi_air_purifier_3h
+    service: fan.turn_on
+  - data:
+      speed: Auto
+    entity_id: fan.xiaomi_air_purifier_3h
+    service: fan.set_speed
+  - service: notify.all_iphones
+    data:
+      message: Air Purifier angeschaltet 💨
+      title: Luftreiniger
   mode: single
 - id: '1601225820971'
   alias: 'Utilities: Set Strava Weight from Garmin'
   description: IFTTT Webhook
   trigger:
-    - platform: state
-      entity_id: sensor.weight
-  condition: [ ]
+  - platform: state
+    entity_id: sensor.weight
+  condition: []
   action:
-    - service: rest_command.set_strava_weight
-      data:
-        weight: '{{ states(''sensor.weight'') }}'
+  - service: rest_command.set_strava_weight
+    data:
+      weight: '{{ states(''sensor.weight'') }}'
   mode: single
 - id: '1602260519154'
   alias: 'Utilities: Stop Music when switching on tv'
   description: ''
   trigger:
-    - platform: state
-      entity_id: media_player.sony_bravia_tv
-      from: 'off'
-      to: 'on'
+  - platform: state
+    entity_id: media_player.sony_bravia_tv
+    from: 'off'
+    to: 'on'
   condition:
-    - condition: device
-      device_id: e945b29ee4bc455b9d3f5dc4703f8a76
-      domain: media_player
-      entity_id: media_player.living_room
-      type: is_playing
+  - condition: device
+    device_id: e945b29ee4bc455b9d3f5dc4703f8a76
+    domain: media_player
+    entity_id: media_player.living_room
+    type: is_playing
   action:
-    - service: media_player.media_stop
-      data: { }
-      entity_id: media_player.living_room
+  - service: media_player.media_stop
+    data: {}
+    entity_id: media_player.living_room
   mode: single
+- id: '1605471414652'
+  alias: 'Leaving: automatically turn off everything'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.someone_in_the_house_in_last_hour
+    from: 'on'
+    to: 'off'
+    for: 00:01:00
+  - platform: time_pattern
+    hours: /1
+  condition:
+  - condition: state
+    entity_id:
+    - binary_sensor.no_one_home
+    - binary_sensor.anything_on
+    state: 'on'
+  - condition: state
+    entity_id:
+    - binary_sensor.someone_in_the_house_in_last_hour
+    - input_boolean.guest_mode
+    state: 'off'
+  action:
+  - service: script.turn_off_everything
+    data: {}
+  - service: notify.all_iphones
+    data:
+      data:
+        title: Leaving
+        message: Everything automatically turned off!
+  mode: single
+- id: '1605471897713'
+  alias: ' Air Purifier Set Silent Mode Sleep'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: fan.xiaomi_air_purifier_3h
+    to: 'on'
+  condition:
+  - condition: time
+    after: '21:30'
+    before: 07:00
+  - condition: state
+    entity_id: fan.xiaomi_air_purifier_3h
+    attribute: speed
+    state: Auto
+  action:
+  - service: fan.set_speed
+    data:
+      speed: Silent
+    entity_id: fan.xiaomi_air_purifier_3h
+  mode: single
+- id: '1605518936109'
+  alias: 'Light: turn off living bedroom'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.activity_in_bedroom
+    from: 'on'
+    to: 'off'
+  condition:
+  - condition: state
+    entity_id: light.schlafzimmerbeleuchtung
+    state: 'on'
+  action:
+  - service: light.turn_off
+    data: {}
+    entity_id: light.schlafzimmerbeleuchtung
+  mode: single
+- id: '1605532116468'
+  alias: 'Light: turn off living room'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.activity_in_livingroom
+    from: 'on'
+    to: 'off'
+  action:
+    service: light.turn_off
+    data:
+      entity_id:
+        - light.wohnzimmerbeleuchtung
+        - light.kuchenbeleuchtung
+      transition: 1
