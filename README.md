@@ -29,7 +29,8 @@ Thanks to [Bas Nijholt's](https://github.com/basnijholt/home-assistant-config) f
 
 ### Sensors
 - Xiaomi Aqara Door Sensor
-- Xiaomi Temperature Humidity Sensor (3x)
+- Xiaomi Temperature Humidity Sensor (5x)
+- IKEA TRÅDFRI Funk-Bewegungsmelder (3x)
 
 ### Lights
 - Philips Hue Go (2. Generation)
@@ -37,6 +38,7 @@ Thanks to [Bas Nijholt's](https://github.com/basnijholt/home-assistant-config) f
 - Philips Hue GU10 Color Spot (3x)
 - Philips Hue E14 White Candle
 - Philips Hue E27 White (2x)
+- IKEA TRÅDFRI E14 White
 
 ### Media Player
 - Sonos Play 1 (2x)
