@@ -30,7 +30,8 @@
       value_template: >
         {{ is_state("binary_sensor.activity_in_bathroom", "on")
           or is_state("binary_sensor.activity_in_bedroom", "on")
-          or is_state("binary_sensor.activity_in_livingroom", "on")}}
+          or is_state("binary_sensor.activity_in_livingroom", "on")
+        or is_state("binary_sensor.motion_sensor_sportroom", "on")}}
 
     motion_detected_in_last_hour:
       friendly_name: Any motion detected in last hour
@@ -55,6 +56,12 @@
         value_template: >
           {{ is_state("binary_sensor.motion_sensor_bedroom", "on") }}
         delay_off: "00:05:00"
+
+    activity_in_sportroom:
+      friendly_name: Activity in the sportroom
+      value_template: >
+        {{ is_state("binary_sensor.motion_sensor_sportroom", "on") }}
+      delay_off: "00:20:00"
 
     activity_in_livingroom:
       friendly_name: Activity in the livingroom

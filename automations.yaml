@@ -1,18 +1,3 @@
-- id: '1594023890815'
-  alias: 'Alarm clock: wake up with Spotify'
-  trigger:
-  - platform: template
-    value_template: '{{ states(''sensor.time'') == (state_attr(''input_datetime.alarm_clock'',
-      ''timestamp'') | int | timestamp_custom(''%H:%M'', False)) }}'
-  condition:
-  - condition: state
-    entity_id: input_boolean.alarm_clock
-    state: 'on'
-  action:
-  - entity_id: input_boolean.alarm_clock
-    service: input_boolean.turn_off
-  - entity_id: input_boolean.wake_up_with_spotify
-    service: script.wake_up_with_spotify
 - id: 52b07f8689be4ab39d46f75410a4267a
   alias: 'Sonos: Set alarm'
   trigger:
@@ -64,6 +49,9 @@
   - condition: state
     entity_id: group.persons
     state: not_home
+  - condition: state
+    entity_id: input_boolean.guest_mode
+    state: 'off'
   action:
   - data:
       message: 'Security: open door is detected, but we are not home.'
@@ -101,7 +89,6 @@
   mode: single
 - id: '1594631698389'
   alias: 'Vacation mode: auto turn on'
-  initial_state: 'on'
   description: ''
   trigger:
   - entity_id: group.persons
@@ -109,7 +96,10 @@
     from: home
     platform: state
     to: not_home
-  condition: []
+  condition:
+  - condition: state
+    entity_id: input_boolean.guest_mode
+    state: 'off'
   action:
   - entity_id: input_boolean.vacation_mode
     service: input_boolean.turn_on
@@ -117,6 +107,8 @@
       message: No one at home for 24 hours, switching on vacation mode.
       title: Vacation mode
     service: notify.all_iphones
+  initial_state: 'on'
+  mode: single
 - id: '1594631785192'
   alias: 'Vacation mode: auto turn off'
   initial_state: 'on'
@@ -194,7 +186,7 @@
     service: script.increase_brightness
   mode: single
 - id: '1595841289664'
-  alias: 'General: Set theme at startup'
+  alias: 'Lovelace: Set theme at startup'
   description: ''
   trigger:
   - event: start
@@ -206,7 +198,7 @@
     service: frontend.set_theme
   mode: single
 - id: '1595842159751'
-  alias: 'General: Jana is coming home'
+  alias: 'Music: Reduce the volume if Jana comes home'
   description: Reduce the volume when Jana comes home
   trigger:
   - entity_id: person.jana
@@ -218,11 +210,6 @@
     device_id: e945b29ee4bc455b9d3f5dc4703f8a76
     domain: media_player
     entity_id: media_player.living_room
-    type: is_on
-  - condition: device
-    device_id: c8087740ba644f19a97fcf633691c491
-    domain: media_player
-    entity_id: media_player.living_room_2
     type: is_on
   - condition: state
     entity_id: person.benjamin
@@ -323,19 +310,8 @@
       title: Work
       message: Benni has left work! ♥️🎉
   id: 68b82abc4319442b930f8d8e5d7d97f9
-- id: '1600372617083'
-  alias: 'General: Tag turn off everything'
-  description: ''
-  trigger:
-  - platform: tag
-    tag_id: 7e4c2640-ca21-43d4-bf29-67a67eb8cb7c
-  condition: []
-  action:
-  - service: script.turn_off_everything
-    data: {}
-  mode: single
 - id: '1600624030295'
-  alias: Air Purifier mode change
+  alias: 'Air Purifier: Change mode'
   description: ''
   trigger:
   - platform: state
@@ -348,7 +324,7 @@
     entity_id: fan.xiaomi_air_purifier_3h
   mode: single
 - id: '1600624273509'
-  alias: Air Purifier turn off
+  alias: 'Air Purifier: auto turn off'
   description: ''
   trigger:
   - platform: numeric_state
@@ -369,7 +345,7 @@
       title: Luftreiniger
   mode: single
 - id: '1600624470835'
-  alias: Air Purifier turn on
+  alias: 'Air Purifier: auto turn on'
   description: ''
   trigger:
   - platform: numeric_state
@@ -382,6 +358,9 @@
     state: 'off'
   - condition: state
     entity_id: input_boolean.vacation_mode
+    state: 'off'
+  - condition: state
+    entity_id: input_boolean.guest_mode
     state: 'off'
   action:
   - data: {}
@@ -409,7 +388,7 @@
       weight: '{{ states(''sensor.weight'') }}'
   mode: single
 - id: '1602260519154'
-  alias: 'Utilities: Stop Music when switching on tv'
+  alias: 'Music: Turn off music if tv switch on'
   description: ''
   trigger:
   - platform: state
@@ -459,7 +438,7 @@
         message: Everything automatically turned off!
   mode: single
 - id: '1605471897713'
-  alias: ' Air Purifier Set Silent Mode Sleep'
+  alias: ' Air Purifier: Change Mode to silent during night'
   description: ''
   trigger:
   - platform: state
@@ -504,10 +483,41 @@
     entity_id: binary_sensor.activity_in_livingroom
     from: 'on'
     to: 'off'
+    for: 01:00:00
   action:
-    service: light.turn_off
+  - service: light.turn_off
     data:
       entity_id:
-        - light.wohnzimmerbeleuchtung
-        - light.kuchenbeleuchtung
+      - light.wohnzimmerbeleuchtung
+      - light.kuchenbeleuchtung
       transition: 1
+  mode: single
+- alias: 'Light: turn off living sportroom'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.activity_in_sportroom
+    from: 'on'
+    to: 'off'
+  action:
+  - service: light.turn_off
+    data: {}
+    entity_id:
+    - light.sportzimmerbeleuchtung
+    - light.color_temperature_light_16
+  mode: single
+  id: d5cef8dc52de4eceb0e08ac4c9fa0547
+- id: '1605607002952'
+  alias: 'Music: Group Sonos Speaker'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: media_player.living_room
+    to: 'on'
+  condition: []
+  action:
+  - service: sonos.join
+    data:
+      master: media_player.living_room
+    entity_id: media_player.living_room_2
+  mode: single
