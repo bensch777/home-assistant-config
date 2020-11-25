@@ -29,3 +29,5 @@ resources:
     type: module
   - url: /local/vertical-stack-in-card.js?v=0.3.2
     type: js
+  - url: /local/simple-thermostat.js?v=1
+    type: module
