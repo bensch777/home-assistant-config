@@ -21,6 +21,9 @@
 - platform: switch
   name: SchlafzimmerLichterkette
   entity_id: switch.configuration_tool_1
+- platform: switch
+  name: Tannenbaum
+  entity_id: switch.on_off_plug_in_unit_14
 - platform: group
   name: Schlafzimmerbeleuchtung
   entities:

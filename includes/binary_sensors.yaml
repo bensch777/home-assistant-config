@@ -55,7 +55,7 @@
         friendly_name: Activity in the bedroom
         value_template: >
           {{ is_state("binary_sensor.motion_sensor_bedroom", "on") }}
-        delay_off: "00:05:00"
+        delay_off: "00:06:00"
 
     activity_in_sportroom:
       friendly_name: Activity in the sportroom
@@ -66,8 +66,9 @@
     activity_in_livingroom:
       friendly_name: Activity in the livingroom
       value_template: >
-        {{ is_state("binary_sensor.motion_sensor_livingroom", "on") }}
-      delay_off: "00:20:00"
+        {{ is_state("binary_sensor.motion_sensor_livingroom", "on") or
+         is_state("media_player.sony_bravia_tv", "on") }}
+      delay_off: "00:15:00"
 
     any_light_on:
       friendly_name: Any light is on
@@ -96,3 +97,10 @@
 
 - platform: workday
   country: DE
+
+- platform: trend
+  sensors:
+    humidity_bathroom_trend:
+      entity_id: sensor.humidity_bathroom
+      sample_duration: 300
+      max_samples: 3

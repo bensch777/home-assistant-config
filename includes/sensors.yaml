@@ -61,26 +61,7 @@
 
         {{ (5 * hours_per_day)|round(2) }}
       unit_of_measurement: h
-    hours_outside_per_day_jana: # XXX: fails when returns "0m"
-      friendly_name: Hours outside per day jana
-      value_template: >
-        {% set value = state_attr("sensor.quarantine_meter_jana", "value") %}
-        {% if value != None %}
-        {% set d, h, m = value.split() %}
-        {% set d, h, m = d[:-1] | int, h[:-1] | int, m[:-1] | int %}
-        {% set hours_outside = ((14 - d) * 86400 - h * 3600 - m * 60) / 3600 %}
-        {{ (hours_outside / 14) | round(1) }}
-        {% endif %}
-    hours_outside_per_day_benjamin: # XXX: fails when returns "0m"
-      friendly_name: Hours outside per day benjamin
-      value_template: >
-        {% set value = state_attr("sensor.quarantine_meter_benjamin", "value") %}
-        {% if value != None %}
-        {% set d, h, m = value.split() %}
-        {% set d, h, m = d[:-1] | int, h[:-1] | int, m[:-1] | int %}
-        {% set hours_outside = ((14 - d) * 86400 - h * 3600 - m * 60) / 3600 %}
-        {{ (hours_outside / 14) | round(1) }}
-        {% endif %}
+
 
 - platform: history_stats
   name: Hours washing machine has been on last 7 days
@@ -263,41 +244,6 @@
   time_window: "00:10:00"
 
 
-- platform: history_stats
-  name: Quarantine meter Benjamin
-  entity_id: person.benjamin
-  state: "home"
-  type: ratio
-  duration:
-    days: 14
-  end: "{{ now() }}"
-
-- platform: history_stats
-  name: Quarantine meter Jana
-  entity_id: person.jana
-  state: "home"
-  type: ratio
-  duration:
-    days: 14
-  end: "{{ now() }}"
-
-- platform: history_stats
-  name: Quarantine meter Benjamin times left
-  entity_id: person.benjamin
-  state: "home"
-  type: count
-  duration:
-    days: 14
-  end: "{{ now() }}"
-
-- platform: history_stats
-  name: Quarantine meter Jana times left
-  entity_id: person.jana
-  state: "home"
-  type: count
-  duration:
-    days: 14
-  end: "{{ now() }}"
 
 
 

@@ -1,0 +1,8 @@
+- platform: xiaomi_cloud_map_extractor
+  host: !secret ip_vacuum
+  token: !secret xiaomi_miio_token_vacuum
+  username: !secret xiaomi_cloud_username
+  password: !secret xiaomi_cloud_password
+  draw: ['all']
+  attributes:
+     - calibration_points
